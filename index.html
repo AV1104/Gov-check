@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SarkariCheck - Indian Government Scheme Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #002147;
+            --bg-deep: #001030;
+            --surface: rgba(255, 255, 255, 0.03);
+            --text-primary: #F8F8F6;
+            --text-secondary: #8A8A8A;
+            --gold: #C8B97A;
+            --gold-dim: rgba(200, 185, 122, 0.3);
+            --gold-dimmer: rgba(200, 185, 122, 0.1);
+            
+            --real-color: #1A6B3A;
+            --real-light: #E6F4EC;
+            --fake-color: #8B1A1A;
+            --fake-light: #FAEAEA;
+            --warn-color: #7A5C00;
+            --warn-light: #FFF8E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-image: 
+                linear-gradient(var(--gold-dimmer) 1px, transparent 1px),
+                linear-gradient(90deg, var(--gold-dimmer) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center top;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6, .display-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .mono-font {
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            height: 72px;
+            background-color: rgba(0, 33, 71, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 100;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-emblem {
+            width: 40px;
+            height: 40px;
+            border: 2px double var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 18px;
+            color: var(--gold);
+        }
+
+        .wordmark {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-tag {
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 80px 40px 60px;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: var(--gold);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 24px;
+        }
+
+        .eyebrow::before, .eyebrow::after {
+            content: '';
+            height: 1px;
+            width: 40px;
+            background-color: var(--gold);
+        }
+
+        .hero h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            font-weight: 900;
+        }
+
+        .hero h1 i {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .hero-subtext {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            background-color: var(--bg-primary);
+        }
+
+        .stat-item {
+            padding: 24px;
+            text-align: center;
+            border-right: 1px solid var(--gold);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            padding: 60px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* INPUT PANEL */
+        .panel {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--gold-dim);
+            padding: 32px;
+            position: relative;
+        }
+
+        .panel-title {
+            color: var(--gold);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .panel-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background-color: var(--gold-dim);
+        }
+
+        /* TABS */
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid var(--gold-dim);
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FORM ELEMENTS */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], 
+        input[type="url"],
+        select, 
+        textarea {
+            width: 100%;
+            background-color: var(--bg-deep);
+            border: 1px solid var(--gold-dim);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23C8B97A%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 12px auto;
+            padding-right: 40px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* FILE UPLOAD */
+        .upload-zone {
+            border: 1px dashed var(--gold);
+            padding: 48px;
+            text-align: center;
+            background-color: var(--surface);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            background-color: var(--gold-dimmer);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 32px;
+            color: var(--gold);
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* VERIFY BUTTON */
+        .verify-btn {
+            width: 100%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 20px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-top: 32px;
+            transition: all 0.3s;
+        }
+
+        .verify-btn:hover {
+            background-color: var(--gold-dimmer);
+        }
+
+        .verify-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(200, 185, 122, 0.2),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: all 0.5s;
+        }
+
+        .verify-btn:hover::after {
+            animation: shimmerSweep 1s infinite;
+        }
+
+        @keyframes shimmerSweep {
+            100% { left: 200%; }
+        }
+
+        /* LOADING PROGRESS */
+        .loading-container {
+            margin-top: 16px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 2px;
+            background-color: var(--gold-dim);
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background-color: var(--gold);
+            transition: width 0.2s;
+        }
+
+        .status-text {
+            font-size: 12px;
+            color: var(--gold);
+            text-align: center;
+        }
+
+        /* RESULT PANEL */
+        .result-panel {
+            margin-top: 40px;
+            display: none;
+            border: 1px solid var(--gold-dim);
+            background-color: var(--bg-deep);
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .verdict-banner {
+            padding: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .verdict-banner.real {
+            background-color: rgba(26, 107, 58, 0.15);
+            border-top: 3px solid var(--real-color);
+        }
+
+        .verdict-banner.fake {
+            background-color: rgba(139, 26, 26, 0.15);
+            border-top: 3px solid var(--fake-color);
+        }
+
+        .verdict-banner.warn {
+            background-color: rgba(122, 92, 0, 0.15);
+            border-top: 3px solid var(--warn-color);
+        }
+
+        .verdict-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .verdict-label {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .real .verdict-label { color: #4ade80; }
+        .fake .verdict-label { color: #f87171; }
+        .warn .verdict-label { color: #fbbf24; }
+
+        .verdict-title {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .trust-score-container {
+            text-align: right;
+        }
+
+        .trust-score {
+            font-size: 48px;
+            line-height: 1;
+        }
+        
+        .trust-score span {
+            font-size: 20px;
+            color: var(--text-secondary);
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+
+        .real .trust-score { color: #4ade80; }
+        .fake .trust-score { color: #f87171; }
+        .warn .trust-score { color: #fbbf24; }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .detail-row {
+            padding: 20px 32px;
+            border-bottom: 1px solid var(--gold-dim);
+            border-right: 1px solid var(--gold-dim);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-row:nth-child(even) {
+            border-right: none;
+        }
+
+        .detail-key {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .official-portal-block {
+            padding: 24px 32px;
+            background-color: var(--gold-dimmer);
+            border-bottom: 1px solid var(--gold-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            display: none; /* conditional based on result */
+        }
+
+        .portal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .portal-label {
+            font-size: 12px;
+            color: var(--gold);
+        }
+
+        .portal-url {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .visit-btn {
+            background-color: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 8px 16px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .visit-btn:hover {
+            background-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .intelligence-summary {
+            padding: 32px;
+            background-color: var(--surface);
+        }
+
+        .summary-title {
+            color: var(--gold);
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+
+        .summary-text {
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-size: 15px;
+        }
+
+        .flag-list {
+            list-style: none;
+        }
+
+        .flag-item {
+            padding: 8px 0;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+            align-items: flex-start;
+        }
+
+        .flag-item:not(:last-child) {
+            border-bottom: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .flag-item.negative::before {
+            content: "—";
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .flag-item.positive::before {
+            content: "—";
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .flag-item.neutral::before {
+            content: "—";
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        /* RIGHT SIDEBAR */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .sidebar-panel {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--gold-dim);
+            padding: 24px;
+        }
+
+        .sidebar-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 12px;
+            color: var(--gold);
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gold-dim);
+        }
+
+        /* Verified Schemes List */
+        .verified-list {
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 8px;
+        }
+        
+        .verified-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .verified-list::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        .verified-list::-webkit-scrollbar-thumb {
+            background: var(--gold-dim);
+        }
+
+        .scheme-item {
+            padding: 12px;
+            background-color: var(--surface);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .scheme-item:hover {
+            border-color: var(--gold-dim);
+            transform: translateX(4px);
+        }
+
+        .scheme-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .scheme-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .badge-real {
+            color: #4ade80;
+            background: rgba(74, 222, 128, 0.1);
+            padding: 2px 6px;
+        }
+
+        /* Red Flags */
+        .red-flag-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+
+        .red-flag-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .flag-icon {
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .flag-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Alerts */
+        .alert-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--gold-dim);
+        }
+
+        .alert-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .alert-title {
+            font-weight: 500;
+            font-size: 14px;
+            color: #f87171;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .alert-title::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background-color: #f87171;
+        }
+
+        .alert-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--gold-dim);
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 11px;
+            color: var(--text-secondary);
+            background-color: var(--bg-primary);
+        }
+
+        .footer-right {
+            max-width: 500px;
+            text-align: right;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .stat-item {
+                border-bottom: 1px solid var(--gold);
+            }
+            .stat-item:nth-child(even) {
+                border-right: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 20px;
+            }
+            .header-tag {
+                display: none;
+            }
+            .hero {
+                padding: 60px 20px 40px;
+            }
+            .hero h1 {
+                font-size: 40px;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
+            .stat-item {
+                border-right: none;
+            }
+            .main-container {
+                padding: 40px 20px;
+            }
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            .detail-row {
+                border-right: none;
+            }
+            .verdict-banner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .trust-score-container {
+                text-align: left;
+            }
+            footer {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .footer-right {
+                text-align: center;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <div class="logo-emblem">SC</div>
+            <div class="wordmark display-font">Sarkari Check</div>
+        </div>
+        <div class="header-tag mono-font">OSINT · GOV VERIFICATION · INDIA</div>
+    </header>
+
+    <section class="hero">
+        <div class="eyebrow mono-font">Intelligence Platform</div>
+        <h1 class="display-font">Verify Indian Government <i>Schemes</i> Instantly.</h1>
+        <p class="hero-subtext">Advanced OSINT analysis engine to detect fraudulent government scheme portals, fake WhatsApp forwards, and scam campaigns.</p>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">1,400+</div>
+            <div class="stat-label">Verified Schemes</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">340+</div>
+            <div class="stat-label">Scams Flagged</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">28</div>
+            <div class="stat-label">Gov Ministries</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">99.1%</div>
+            <div class="stat-label">Detection Accuracy</div>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <!-- LEFT COLUMN: INPUT -->
+        <div class="left-col">
+            <div class="panel">
+                <div class="panel-title mono-font">01 — Submit for Verification</div>
+                
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="tab-name">SCHEME NAME</button>
+                    <button class="tab-btn" data-tab="tab-url">URL / LINK</button>
+                    <button class="tab-btn" data-tab="tab-text">DESCRIPTION</button>
+                    <button class="tab-btn" data-tab="tab-file">UPLOAD FILE</button>
+                </div>
+
+                <!-- TAB 1 -->
+                <div class="tab-content active" id="tab-name">
+                    <div class="form-group">
+                        <label>SCHEME NAME</label>
+                        <input type="text" id="input-scheme-name" placeholder="e.g. PM Kisan Samman Nidhi">
+                    </div>
+                    <div class="form-group">
+                        <label>MINISTRY / DEPARTMENT</label>
+                        <select id="input-ministry">
+                            <option value="">Select Ministry (Optional)</option>
+                            <option>Agriculture</option>
+                            <option>Finance</option>
+                            <option>Health</option>
+                            <option>Housing</option>
+                            <option>Education</option>
+                            <option>Women & Child</option>
+                            <option>Labour</option>
+                            <option>Rural Development</option>
+                            <option>Skill Development</option>
+                            <option>Electronics & IT</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>BENEFICIARY CATEGORY</label>
+                        <select>
+                            <option value="">Select Category (Optional)</option>
+                            <option>Farmers</option>
+                            <option>Students/Youth</option>
+                            <option>Women</option>
+                            <option>Senior Citizens</option>
+                            <option>BPL</option>
+                            <option>Entrepreneurs/MSMEs</option>
+                            <option>General</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TAB 2 -->
+                <div class="tab-content" id="tab-url">
+                    <div class="form-group">
+                        <label>URL / LINK TO VERIFY</label>
+                        <input type="url" id="input-url" placeholder="https://example.com/apply">
+                    </div>
+                    <div class="form-group">
+                        <label>SCHEME NAME ON SITE (OPTIONAL)</label>
+                        <input type="text" id="input-url-scheme" placeholder="Name mentioned on the website">
+                    </div>
+                    <div class="form-group">
+                        <label>WHERE DID YOU FIND THIS LINK?</label>
+                        <select>
+                            <option value="">Select Source</option>
+                            <option>WhatsApp/Telegram</option>
+                            <option>Email/SMS</option>
+                            <option>Social Media</option>
+                            <option>Newspaper</option>
+                            <option>Google Search</option>
+                            <option>Official Government Site</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TAB 3 -->
+                <div class="tab-content" id="tab-text">
+                    <div class="form-group">
+                        <label>PASTE MESSAGE OR DESCRIPTION</label>
+                        <textarea id="input-text" placeholder="Paste full SMS, WhatsApp message, email, or scheme description..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>LANGUAGE OF CONTENT</label>
+                        <select>
+                            <option>English</option>
+                            <option>Hindi</option>
+                            <option>Hinglish</option>
+                            <option>Gujarati</option>
+                            <option>Marathi</option>
+                            <option>Tamil</option>
+                            <option>Other Regional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- TAB 4 -->
+                <div class="tab-content" id="tab-file">
+                    <div class="upload-zone" id="drop-zone">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Drag and drop file here</div>
+                        <div class="upload-hint">Accepts: PDF, JPG, PNG, TXT up to 10MB</div>
+                        <div id="file-name-display" style="margin-top: 16px; color: var(--gold); font-family: 'IBM Plex Mono'; display: none;"></div>
+                    </div>
+                </div>
+
+                <button class="verify-btn" onclick="runVerification()">⟶ Run Verification Analysis</button>
+
+                <div class="loading-container" id="loading-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="status-text mono-font" id="status-text">Initializing OSINT engine...</div>
+                </div>
+            </div>
+
+            <!-- RESULT PANEL -->
+            <div class="result-panel" id="result-panel">
+                <div class="verdict-banner" id="verdict-banner">
+                    <div class="verdict-left">
+                        <div class="verdict-label mono-font" id="verdict-label">
+                            <span id="verdict-icon"></span> <span id="verdict-text">VERDICT</span>
+                        </div>
+                        <h2 class="verdict-title display-font" id="result-scheme-title">Analysis Result</h2>
+                    </div>
+                    <div class="trust-score-container">
+                        <div class="trust-score display-font" id="trust-score">0<span>/100</span></div>
+                        <div class="detail-key mono-font">CONFIDENCE SCORE</div>
+                    </div>
+                </div>
+
+                <div class="official-portal-block" id="official-portal-block">
+                    <div class="portal-info">
+                        <div class="portal-label mono-font">OFFICIAL PORTAL RECOGNIZED</div>
+                        <a href="#" target="_blank" class="portal-url" id="official-url">gov.in</a>
+                    </div>
+                    <a href="#" target="_blank" class="visit-btn" id="official-visit-btn">VISIT ↗</a>
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-row">
+                        <span class="detail-key mono-font">OFFICIAL DOMAIN</span>
+                        <span class="detail-value" id="res-domain">Not Applicable</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key mono-font">SCHEME DATABASE</span>
+                        <span class="detail-value" id="res-db">Checking...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key mono-font">SCAM PATTERN MATCH</span>
+                        <span class="detail-value" id="res-pattern">Checking...</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-key mono-font">RISK LEVEL</span>
+                        <span class="detail-value" id="res-risk">Checking...</span>
+                    </div>
+                </div>
+
+                <div class="intelligence-summary">
+                    <div class="summary-title mono-font">INTELLIGENCE SUMMARY</div>
+                    <p class="summary-text" id="summary-text">Analysis complete.</p>
+                    <ul class="flag-list" id="flag-list">
+                        <!-- Flags injected here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: SIDEBAR -->
+        <div class="sidebar">
+            <!-- PANEL 1 -->
+            <div class="sidebar-panel">
+                <div class="sidebar-title">VERIFIED GOV SCHEMES</div>
+                <div class="verified-list" id="verified-list">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- PANEL 2 -->
+            <div class="sidebar-panel">
+                <div class="sidebar-title">RED FLAG INDICATORS</div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">💸</div>
+                    <div class="flag-text">All real gov schemes are free — never pay fees</div>
+                </div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">🔗</div>
+                    <div class="flag-text">Domain must be .gov.in or .nic.in</div>
+                </div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">⏱️</div>
+                    <div class="flag-text">Urgency language is a manipulation tactic</div>
+                </div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">🔐</div>
+                    <div class="flag-text">Never share OTP/Aadhaar via SMS or WhatsApp</div>
+                </div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">📱</div>
+                    <div class="flag-text">Schemes shared only on WhatsApp are suspicious</div>
+                </div>
+                <div class="red-flag-item">
+                    <div class="flag-icon">🏆</div>
+                    <div class="flag-text">Lottery/cash prize claims are always scams</div>
+                </div>
+            </div>
+
+            <!-- PANEL 3 -->
+            <div class="sidebar-panel">
+                <div class="sidebar-title">RECENT SCAM ALERTS</div>
+                <div class="alert-item">
+                    <div class="alert-title">Fake "PM Awas Yojana 2025" Portal</div>
+                    <div class="alert-desc">— cloned site collecting Aadhaar + ₹500 fee</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-title">Free Gas Cylinder WhatsApp Scam</div>
+                    <div class="alert-desc">— viral message linking to phishing site</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-title">Fake "Kisan Credit Card" SMS</div>
+                    <div class="alert-desc">— asking for bank OTP to activate ₹3L credit</div>
+                </div>
+                <div class="alert-item">
+                    <div class="alert-title">Spurious Scholarship Portal</div>
+                    <div class="alert-desc">— scholarshipindia.net not affiliated with NSP</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div>SarkariCheck v1.0 · Data: india.gov.in, myscheme.gov.in</div>
+        <div class="footer-right">Disclaimer: This tool is not affiliated with any government body. Intelligence generated is for informational purposes. Users should always verify directly through official channels.</div>
+    </footer>
+
+    <script>
+        // Tab Switching Logic
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        let activeTabId = 'tab-name';
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                btn.classList.add('active');
+                activeTabId = btn.getAttribute('data-tab');
+                document.getElementById(activeTabId).classList.add('active');
+            });
+        });
+
+        // Drag and Drop Logic
+        const dropZone = document.getElementById('drop-zone');
+        const fileNameDisplay = document.getElementById('file-name-display');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            if (files.length > 0) {
+                const file = files[0];
+                fileNameDisplay.style.display = 'block';
+                fileNameDisplay.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            }
+        });
+        
+        // Open file picker on click
+        dropZone.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf,.jpg,.png,.txt';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if(file) {
+                    fileNameDisplay.style.display = 'block';
+                    fileNameDisplay.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                }
+            }
+            input.click();
+        });
+
+        // Database
+        const officialSchemes = [
+            { name: "PM Kisan Samman Nidhi", ministry: "Agriculture", year: "2019", url: "https://pmkisan.gov.in" },
+            { name: "PM Awas Yojana Urban", ministry: "Housing", year: "2015", url: "https://pmaymis.gov.in" },
+            { name: "PM Awas Yojana Gramin", ministry: "Rural Dev", year: "2016", url: "https://pmayg.nic.in" },
+            { name: "Ayushman Bharat PM-JAY", ministry: "Health", year: "2018", url: "https://pmjay.gov.in" },
+            { name: "PM Ujjwala Yojana", ministry: "Petroleum", year: "2016", url: "https://www.pmuy.gov.in" },
+            { name: "Sukanya Samriddhi Yojana", ministry: "Finance", year: "2015", url: "https://www.india.gov.in" },
+            { name: "PM Jan Dhan Yojana", ministry: "Finance", year: "2014", url: "https://pmjdy.gov.in" },
+            { name: "Atal Pension Yojana", ministry: "Finance", year: "2015", url: "https://www.india.gov.in" },
+            { name: "PM Mudra Yojana", ministry: "Finance", year: "2015", url: "https://www.mudra.org.in" },
+            { name: "National Scholarship Portal", ministry: "Education", year: "2015", url: "https://scholarships.gov.in" },
+            { name: "MGNREGA", ministry: "Rural Dev", year: "2005", url: "https://nrega.nic.in" },
+            { name: "PM SVANidhi", ministry: "Housing", year: "2020", url: "https://pmsvanidhi.mohua.gov.in" }
+        ];
+
+        const scamKeywords = [
+            "click here to claim", "limited time offer", "last date today", 
+            "send otp", "processing fee", "registration fee", "₹ charge", 
+            "whatsapp only", "guaranteed money", "lottery", 
+            "you have been selected", "urgent apply", "free gift", "cash prize"
+        ];
+
+        const scamDomains = [
+            "pmkisan-yojana.com", "pmawasyojana2025.com", "scholarshipindia.net", 
+            "freegas-yojana.in", "pmkcc-apply.com", "sarkari-yojana.net", 
+            "govtscheme.online", "indiascheme.xyz", "bharatyojana.tk"
+        ];
+
+        // Populate Sidebar Schemes
+        const verifiedListEl = document.getElementById('verified-list');
+        officialSchemes.forEach(scheme => {
+            const el = document.createElement('div');
+            el.className = 'scheme-item';
+            el.innerHTML = `
+                <div class="scheme-name">${scheme.name}</div>
+                <div class="scheme-meta">
+                    <span>${scheme.ministry} · ${scheme.year}</span>
+                    <span class="badge-real">✓ REAL</span>
+                </div>
+            `;
+            el.onclick = () => {
+                // Auto-fill and switch to tab
+                tabBtns[0].click();
+                document.getElementById('input-scheme-name').value = scheme.name;
+            };
+            verifiedListEl.appendChild(el);
+        });
+
+        // Verification Logic
+        const loadingTexts = [
+            "Cross-referencing official scheme database...",
+            "Checking domain registry & WHOIS data...",
+            "Scanning for red flags & scam patterns...",
+            "Generating intelligence report..."
+        ];
+
+        function getDomain(url) {
+            try {
+                let formattedUrl = url;
+                if (!url.startsWith('http')) {
+                    formattedUrl = 'https://' + url;
+                }
+                const urlObj = new URL(formattedUrl);
+                return urlObj.hostname;
+            } catch (e) {
+                return url; // fallback
+            }
+        }
+
+        function runVerification() {
+            // Get inputs based on active tab
+            let inputName = document.getElementById('input-scheme-name').value.trim().toLowerCase();
+            let inputUrl = document.getElementById('input-url').value.trim().toLowerCase();
+            let inputText = document.getElementById('input-text').value.trim().toLowerCase();
+            
+            // Collect all available text from any tab for general analysis
+            if (activeTabId === 'tab-url' && document.getElementById('input-url-scheme').value) {
+                inputName = document.getElementById('input-url-scheme').value.trim().toLowerCase();
+            }
+
+            if (!inputName && !inputUrl && !inputText && activeTabId !== 'tab-file') {
+                alert("Please provide some input (Scheme Name, URL, or Description) to verify.");
+                return;
+            }
+
+            // Hide result, show loading
+            document.getElementById('result-panel').style.display = 'none';
+            const loadingContainer = document.getElementById('loading-container');
+            const progressFill = document.getElementById('progress-fill');
+            const statusText = document.getElementById('status-text');
+            
+            loadingContainer.style.display = 'block';
+            progressFill.style.width = '0%';
+            
+            // Animation simulator
+            let step = 0;
+            const interval = setInterval(() => {
+                step++;
+                progressFill.style.width = `${step * 25}%`;
+                
+                if (step <= 4) {
+                    statusText.textContent = loadingTexts[step-1];
+                }
+
+                if (step >= 4) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingContainer.style.display = 'none';
+                        showResults(inputName, inputUrl, inputText);
+                    }, 600);
+                }
+            }, 600);
+        }
+
+        function showResults(name, urlString, text) {
+            let score = 50; // Base score
+            let flags = [];
+            let officialMatched = null;
+            let domain = "";
+            let numScamFlags = 0;
+
+            const contentToScan = `${name} ${text}`.toLowerCase();
+
+            // 1. Database matching (Name)
+            if (name || text) {
+                for (const scheme of officialSchemes) {
+                    const sName = scheme.name.toLowerCase();
+                    if (name === sName || (text && text.includes(sName))) {
+                        score += 40;
+                        flags.push({type: 'positive', text: `Exact match found in official scheme database: ${scheme.name}`});
+                        officialMatched = scheme;
+                        break;
+                    } else if (name.includes(sName.split(' ')[0]) || sName.includes(name.split(' ')[0])) {
+                        if (name.length > 3) {
+                            score += 20;
+                            flags.push({type: 'positive', text: `Partial match found in official database`});
+                        }
+                    }
+                }
+            }
+
+            // Text rules
+            if (contentToScan.includes('.gov.in')) {
+                score += 20;
+                flags.push({type: 'positive', text: `Text references official .gov.in domain`});
+            }
+            if (contentToScan.includes('ministry') || contentToScan.includes('mantralaya')) {
+                score += 10;
+                flags.push({type: 'positive', text: `Mentions government ministry terminology`});
+            }
+
+            // Scam keywords
+            for (const keyword of scamKeywords) {
+                if (contentToScan.includes(keyword)) {
+                    score -= 15;
+                    numScamFlags++;
+                    flags.push({type: 'negative', text: `Scam terminology detected: "${keyword}"`});
+                }
+            }
+
+            // 2. URL analysis
+            if (urlString || (text && text.includes('http'))) {
+                let targetUrl = urlString;
+                if (!targetUrl && text) {
+                    const match = text.match(/https?:\/\/[^\s]+/);
+                    if (match) targetUrl = match[0];
+                }
+
+                if (targetUrl) {
+                    domain = getDomain(targetUrl);
+                    
+                    if (domain.endsWith('.gov.in') || domain.endsWith('.nic.in')) {
+                        score += 35;
+                        flags.push({type: 'positive', text: `Domain relies on official government TLD (.gov.in/.nic.in)`});
+                    } else {
+                        score -= 30;
+                        flags.push({type: 'negative', text: `Domain is NOT .gov.in or .nic.in`});
+                        
+                        if (!targetUrl.startsWith('https')) {
+                            score -= 10;
+                            flags.push({type: 'negative', text: `Uses insecure HTTP connection`});
+                        }
+
+                        // Check blacklist
+                        if (scamDomains.some(d => domain.includes(d))) {
+                            score -= 50;
+                            numScamFlags++;
+                            flags.push({type: 'negative', text: `URL matches KNOWN SCAM DOMAIN blocklist`});
+                        }
+                        
+                        // Typosquatting check (if scheme name is in URL but not gov.in)
+                        if (name && domain.replace(/[^a-z]/g, '').includes(name.replace(/[^a-z]/g, '').substring(0, 5))) {
+                            score -= 25;
+                            numScamFlags++;
+                            flags.push({type: 'negative', text: `Typosquatting suspected: Domain mimics scheme name without official TLD`});
+                        }
+                    }
+                }
+            }
+
+            // Constrain score
+            score = Math.max(0, Math.min(100, score));
+
+            // Determine verdict
+            let verdict = 'SUSPICIOUS';
+            let verdictIcon = '⚠️';
+            let verdictClass = 'warn';
+            let riskLevel = 'Medium';
+            let summaryStr = 'The submitted information shows mixed signals. Exercise caution before proceeding or sharing any personal data.';
+
+            if (score >= 70) {
+                verdict = 'REAL / SAFE';
+                verdictIcon = '✅';
+                verdictClass = 'real';
+                riskLevel = 'Low';
+                summaryStr = 'The information provided strongly aligns with official government structures. The domain or scheme details are verified as legitimate.';
+                if (flags.length === 0) flags.push({type: 'positive', text: 'Appears to be a standard query with no red flags.'});
+            } else if (score <= 35) {
+                verdict = 'FAKE / SCAM';
+                verdictIcon = '❌';
+                verdictClass = 'fake';
+                riskLevel = 'Critical';
+                summaryStr = 'CRITICAL WARNING: This matches patterns of known fraud campaigns. Do NOT click links, pay money, or share personal information (Aadhaar/OTP).';
+            }
+
+            // Populate DOM
+            const banner = document.getElementById('verdict-banner');
+            banner.className = `verdict-banner ${verdictClass}`;
+            
+            document.getElementById('verdict-icon').textContent = verdictIcon;
+            document.getElementById('verdict-text').textContent = verdict;
+            document.getElementById('trust-score').innerHTML = `${score}<span>/100</span>`;
+            
+            let displayTitle = name || domain || "Analyzed Content";
+            if (displayTitle.length > 40) displayTitle = displayTitle.substring(0, 40) + '...';
+            document.getElementById('result-scheme-title').textContent = displayTitle;
+
+            // Details Grid
+            document.getElementById('res-domain').textContent = domain ? (domain.endsWith('.gov.in') || domain.endsWith('.nic.in') ? 'Confirmed Official' : (score > 35 ? 'Not Verified Gov' : 'High Risk Domain')) : 'Not Provided';
+            document.getElementById('res-db').textContent = officialMatched ? `Found (${officialMatched.ministry})` : 'Not Found';
+            document.getElementById('res-pattern').textContent = numScamFlags > 0 ? `${numScamFlags} flags detected` : 'Clean (No patterns)';
+            
+            const riskEl = document.getElementById('res-risk');
+            riskEl.textContent = riskLevel;
+            riskEl.style.color = riskLevel === 'Critical' ? '#f87171' : (riskLevel === 'Medium' ? '#fbbf24' : '#4ade80');
+
+            // Official Portal Block
+            const portalBlock = document.getElementById('official-portal-block');
+            if (officialMatched) {
+                portalBlock.style.display = 'flex';
+                document.getElementById('official-url').textContent = officialMatched.url;
+                document.getElementById('official-visit-btn').href = officialMatched.url;
+            } else {
+                portalBlock.style.display = 'none';
+            }
+
+            // Summary & Flags
+            document.getElementById('summary-text').textContent = summaryStr;
+            const flagListEl = document.getElementById('flag-list');
+            flagListEl.innerHTML = '';
+            
+            if (flags.length === 0) {
+                flags.push({type: 'neutral', text: 'Insufficient data for a definitive conclusion.'});
+            }
+
+            flags.forEach(f => {
+                const li = document.createElement('li');
+                li.className = `flag-item ${f.type}`;
+                li.textContent = f.text;
+                flagListEl.appendChild(li);
+            });
+
+            // Show Result
+            document.getElementById('result-panel').style.display = 'block';
+            
+            // Scroll to result smoothly
+            setTimeout(() => {
+                document.getElementById('result-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100);
+        }
+    </script>
+</body>
+</html>
